@@ -1,0 +1,111 @@
+# =========================
+# Dependencies
+# =========================
+node_modules/
+**/node_modules/
+
+# =========================
+# Build Output
+# =========================
+dist/
+build/
+out/
+coverage/
+.next/
+.nuxt/
+.vite/
+*.tsbuildinfo
+
+# =========================
+# Environment Variables
+# =========================
+.env
+.env.*
+!.env.example
+
+# =========================
+# Logs
+# =========================
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# =========================
+# Operating System Files
+# =========================
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# =========================
+# IDE / Editors
+# =========================
+.vscode/
+!.vscode/extensions.json
+.idea/
+*.swp
+*.swo
+
+# =========================
+# Documentation (Local)
+# Uncomment if you don't want to push docs
+# =========================
+docs/
+
+# =========================
+# AI / Local Prompt Files
+# =========================
+PROMPT.md
+*.prompt.md
+
+# =========================
+# Temporary Files
+# =========================
+tmp/
+temp/
+.cache/
+*.tmp
+
+# =========================
+# Package Managers
+# =========================
+.pnpm-store/
+.npm/
+.yarn/
+.yarn/cache/
+.yarn/unplugged/
+
+# =========================
+# Testing
+# =========================
+coverage/
+.nyc_output/
+
+# =========================
+# Docker
+# =========================
+docker-compose.override.yml
+
+# =========================
+# Database
+# =========================
+*.sqlite
+*.sqlite3
+*.db
+
+# =========================
+# Uploads / Generated Files
+# =========================
+uploads/
+storage/
+generated/
+
+# =========================
+# Misc
+# =========================
+*.pid
+*.seed
+*.tgz
