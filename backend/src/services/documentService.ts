@@ -1,8 +1,11 @@
 import fs from "fs";
+import "multer";
 import {
   documentRepository,
   DocumentRepository,
 } from "../repositories/documentRepository";
+import { documentProcessor } from "./documentProcessor";
+import { vectorDbService } from "./vectorDbService";
 import { AppError } from "../utils/AppError";
 import { IDocument } from "../models/Document";
 
@@ -34,6 +37,11 @@ export class DocumentService {
       status: "pending",
     });
 
+    // Trigger asynchronous parsing and vector embedding in background
+    documentProcessor.processDocument(document._id.toString()).catch((err) => {
+      console.error(`Background processing failed for ${document._id}:`, err);
+    });
+
     return document;
   }
 
@@ -61,7 +69,10 @@ export class DocumentService {
   async deleteDocument(userId: string, documentId: string): Promise<void> {
     const document = await this.getDocumentById(userId, documentId);
 
-    // Remove file from disk
+    // Delete associated vector embeddings from ChromaDB
+    await vectorDbService.deleteByDocumentId(documentId);
+
+    // Remove local file from storage disk
     if (fs.existsSync(document.filePath)) {
       fs.unlinkSync(document.filePath);
     }
