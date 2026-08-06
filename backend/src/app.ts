@@ -6,6 +6,7 @@ import cookieParser from "cookie-parser";
 import { env } from "./config/env";
 import { errorMiddleware } from "./middlewares/errorMiddleware";
 import authRoutes from "./routes/authRoutes";
+import documentRoutes from "./routes/documentRoutes";
 
 const app: Application = express();
 
@@ -29,6 +30,7 @@ app.get("/health", (_req, res) => {
 
 // API Routes
 app.use("/api/v1/auth", authRoutes);
+app.use("/api/v1/documents", documentRoutes);
 
 // Global Error Handling Middleware
 app.use(errorMiddleware);

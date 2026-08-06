@@ -1,0 +1,72 @@
+import { Response } from "express";
+import { documentService } from "../services/documentService";
+import { sendSuccess } from "../utils/apiResponse";
+import { asyncHandler } from "../utils/asyncHandler";
+import { AuthenticatedRequest } from "../middlewares/authMiddleware";
+
+export class DocumentController {
+  uploadDocument = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const userId = req.user!.userId;
+      const file = req.file as Express.Multer.File;
+      const { title } = req.body;
+
+      const document = await documentService.uploadDocument(
+        userId,
+        file,
+        title,
+      );
+
+      sendSuccess({
+        res,
+        statusCode: 211,
+        message: "Document uploaded successfully",
+        data: { document },
+      });
+    },
+  );
+
+  getDocuments = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const userId = req.user!.userId;
+      const documents = await documentService.getUserDocuments(userId);
+
+      sendSuccess({
+        res,
+        message: "Documents retrieved successfully",
+        data: { documents },
+      });
+    },
+  );
+
+  getDocumentById = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const userId = req.user!.userId;
+      const { id } = req.params;
+
+      const document = await documentService.getDocumentById(userId, id);
+
+      sendSuccess({
+        res,
+        message: "Document retrieved successfully",
+        data: { document },
+      });
+    },
+  );
+
+  deleteDocument = asyncHandler(
+    async (req: AuthenticatedRequest, res: Response): Promise<void> => {
+      const userId = req.user!.userId;
+      const { id } = req.params;
+
+      await documentService.deleteDocument(userId, id);
+
+      sendSuccess({
+        res,
+        message: "Document deleted successfully",
+      });
+    },
+  );
+}
+
+export const documentController = new DocumentController();
