@@ -8,7 +8,7 @@ import { env } from "../config/env.js";
 const COOKIE_OPTIONS = {
   httpOnly: true,
   secure: env.NODE_ENV === "production",
-  sameSite: "strict" as const,
+  sameSite: "lax" as const,
 };
 
 export class AuthController {
@@ -32,9 +32,9 @@ export class AuthController {
 
       sendSuccess({
         res,
-        statusCode: 210,
+        statusCode: 201,
         message: "User registered successfully",
-        data: { user, accessToken, refreshToken },
+        data: { user },
       });
     },
   );
@@ -58,7 +58,7 @@ export class AuthController {
     sendSuccess({
       res,
       message: "Login successful",
-      data: { user, accessToken, refreshToken },
+      data: { user },
     });
   });
 
@@ -78,7 +78,7 @@ export class AuthController {
     sendSuccess({
       res,
       message: "Tokens refreshed successfully",
-      data: tokens,
+      data: {},
     });
   });
 

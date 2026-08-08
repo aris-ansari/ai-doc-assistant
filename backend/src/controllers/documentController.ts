@@ -19,7 +19,7 @@ export class DocumentController {
 
       sendSuccess({
         res,
-        statusCode: 211,
+        statusCode: 201,
         message: "Document uploaded successfully",
         data: { document },
       });

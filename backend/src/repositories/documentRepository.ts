@@ -13,6 +13,14 @@ export class DocumentRepository {
     return DocumentModel.find({ userId }).sort({ createdAt: -1 }).exec();
   }
 
+  async findByIdsAndUserId(
+    ids: string[],
+    userId: string,
+  ): Promise<IDocument[]> {
+    if (ids.length === 0) return [];
+    return DocumentModel.find({ _id: { $in: ids }, userId }).exec();
+  }
+
   async update(
     id: string,
     updateData: Partial<IDocument>,

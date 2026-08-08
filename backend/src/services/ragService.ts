@@ -3,8 +3,9 @@ import { env } from "../config/env.js";
 import { embeddingService } from "./embeddingService.js";
 import { vectorDbService } from "./vectorDbService.js";
 import { conversationRepository } from "../repositories/conversationRepository.js";
+import { documentRepository } from "../repositories/documentRepository.js";
 import { AppError } from "../utils/AppError.js";
-import { IConversation, ISourceCitation } from "../models/Conversation.js";
+import type { IConversation, IMessage, ISourceCitation } from "../models/Conversation.js";
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
 
@@ -14,6 +15,18 @@ export class RagService {
     title?: string,
     documentIds: string[] = [],
   ): Promise<IConversation> {
+    const ownedDocuments = await documentRepository.findByIdsAndUserId(
+      documentIds,
+      userId,
+    );
+
+    if (ownedDocuments.length !== new Set(documentIds).size) {
+      throw new AppError(
+        "One or more documents are not available to this user",
+        403,
+      );
+    }
+
     return conversationRepository.create({ userId, title, documentIds });
   }
 
@@ -40,7 +53,7 @@ export class RagService {
     conversationId: string,
     userQuery: string,
     documentIds?: string[],
-  ): Promise<{ conversation: IConversation; assistantMessage: any }> {
+  ): Promise<{ conversation: IConversation; assistantMessage: IMessage }> {
     const conversation = await this.getConversation(userId, conversationId);
 
     // Determine target document filter IDs
@@ -48,15 +61,32 @@ export class RagService {
       ? documentIds
       : conversation.documentIds.map((id) => id.toString());
 
+    const ownedDocuments = await documentRepository.findByIdsAndUserId(
+      activeDocIds,
+      userId,
+    );
+    if (ownedDocuments.length !== new Set(activeDocIds).size) {
+      throw new AppError(
+        "One or more documents are not available to this user",
+        403,
+      );
+    }
+
     // 1. Generate query vector embedding
     const queryEmbedding = await embeddingService.generateEmbedding(userQuery);
 
     // 2. Query ChromaDB vector store for matching document chunks
-    let whereFilter: Record<string, any> | undefined;
+    let whereFilter: Record<string, unknown>;
     if (activeDocIds.length === 1) {
-      whereFilter = { documentId: activeDocIds[0] };
+      whereFilter = {
+        $and: [{ userId }, { documentId: activeDocIds[0] }],
+      };
     } else if (activeDocIds.length > 1) {
-      whereFilter = { documentId: { $in: activeDocIds } };
+      whereFilter = {
+        $and: [{ userId }, { documentId: { $in: activeDocIds } }],
+      };
+    } else {
+      whereFilter = { userId };
     }
 
     const queryResult = await vectorDbService.querySimilarity(
@@ -74,14 +104,14 @@ export class RagService {
         (docText: string | null, idx: number) => {
           if (!docText) return;
           const metadata = queryResult.metadatas?.[0]?.[idx] as
-            | Record<string, any>
+            | Record<string, unknown>
             | undefined;
           contextSnippets.push(`[Source ${idx + 1}]: ${docText}`);
 
-          if (metadata?.documentId) {
+          if (typeof metadata?.documentId === "string") {
             sources.push({
               documentId: metadata.documentId,
-              chunkIndex: metadata.chunkIndex ?? idx,
+              chunkIndex: typeof metadata.chunkIndex === "number" ? metadata.chunkIndex : idx,
               snippet: docText.substring(0, 150) + "...",
             });
           }
@@ -124,8 +154,12 @@ Instructions:
       assistantMsg,
     );
 
+    if (!updatedConversation) {
+      throw new AppError("Conversation no longer exists", 404);
+    }
+
     return {
-      conversation: updatedConversation!,
+      conversation: updatedConversation,
       assistantMessage: assistantMsg,
     };
   }

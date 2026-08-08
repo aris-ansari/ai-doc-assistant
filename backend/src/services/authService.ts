@@ -20,15 +20,20 @@ export class AuthService {
     accessToken: string;
     refreshToken: string;
   }> {
-    const existingUser = await this.userRepo.findByEmail(email);
+    const normalizedEmail = email.trim().toLowerCase();
+    const existingUser = await this.userRepo.findByEmail(normalizedEmail);
     if (existingUser) {
       throw new AppError("Email address is already in use", 400);
     }
 
-    const salt = await bcrypt.genSalt(10);
+    const salt = await bcrypt.genSalt(12);
     const passwordHash = await bcrypt.hash(password, salt);
 
-    const user = await this.userRepo.create({ name, email, passwordHash });
+    const user = await this.userRepo.create({
+      name: name.trim(),
+      email: normalizedEmail,
+      passwordHash,
+    });
     const { accessToken, refreshToken } = generateTokens(user._id.toString());
 
     return {
@@ -51,7 +56,7 @@ export class AuthService {
     accessToken: string;
     refreshToken: string;
   }> {
-    const user = await this.userRepo.findByEmail(email);
+    const user = await this.userRepo.findByEmail(email.trim().toLowerCase());
     if (!user) {
       throw new AppError("Invalid email or password", 401);
     }

@@ -15,9 +15,9 @@ export class VectorDbService {
       return await this.client.getOrCreateCollection({
         name: this.collectionName,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       throw new AppError(
-        `Failed to access ChromaDB collection: ${error.message}`,
+        `Failed to access ChromaDB collection: ${error instanceof Error ? error.message : String(error)}`,
         500,
       );
     }
@@ -31,7 +31,7 @@ export class VectorDbService {
       id: string;
       text: string;
       embedding: number[];
-      metadata: Record<string, any>;
+      metadata: Record<string, string | number | boolean>;
     }[],
   ): Promise<void> {
     if (chunks.length === 0) return;
@@ -51,7 +51,7 @@ export class VectorDbService {
   async querySimilarity(
     queryEmbedding: number[],
     limit: number = 5,
-    whereFilter?: Record<string, any>,
+    whereFilter?: Record<string, unknown>,
   ) {
     const collection = await this.getCollection();
     return await collection.query({

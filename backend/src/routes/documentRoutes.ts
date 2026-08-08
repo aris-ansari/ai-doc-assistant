@@ -2,8 +2,16 @@ import { Router } from "express";
 import { documentController } from "../controllers/documentController.js";
 import { authenticate } from "../middlewares/authMiddleware.js";
 import { upload } from "../middlewares/uploadMiddleware.js";
+import { validate } from "../middlewares/validateMiddleware.js";
+import { z } from "zod";
 
 const router = Router();
+
+const documentIdSchema = z.object({
+  params: z.object({
+    id: z.string().regex(/^[0-9a-fA-F]{24}$/, "Invalid document ID"),
+  }),
+});
 
 // Protect all document routes
 router.use(authenticate);
@@ -14,7 +22,7 @@ router.post(
   documentController.uploadDocument,
 );
 router.get("/", documentController.getDocuments);
-router.get("/:id", documentController.getDocumentById);
-router.delete("/:id", documentController.deleteDocument);
+router.get("/:id", validate(documentIdSchema), documentController.getDocumentById);
+router.delete("/:id", validate(documentIdSchema), documentController.deleteDocument);
 
 export default router;

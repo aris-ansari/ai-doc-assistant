@@ -15,8 +15,11 @@ export class EmbeddingService {
     try {
       const result = await embeddingModel.embedContent(text);
       return result.embedding.values;
-    } catch (error: any) {
-      throw new AppError(`Failed to generate embedding: ${error.message}`, 500);
+    } catch (error: unknown) {
+      throw new AppError(
+        `Failed to generate embedding: ${error instanceof Error ? error.message : String(error)}`,
+        500,
+      );
     }
   }
 

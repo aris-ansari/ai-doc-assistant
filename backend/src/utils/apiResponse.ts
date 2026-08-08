@@ -7,9 +7,6 @@ interface SuccessResponseParams<T> {
   data?: T;
 }
 
-/**
- * Sends a standardized success HTTP response.
- */
 export const sendSuccess = <T>({
   res,
   statusCode = 200,
@@ -18,22 +15,21 @@ export const sendSuccess = <T>({
 }: SuccessResponseParams<T>): Response => {
   return res.status(statusCode).json({
     success: true,
+    statusCode,
     message,
     data,
   });
 };
 
-/**
- * Sends a standardized error HTTP response.
- */
 export const sendError = (
   res: Response,
   statusCode: number,
   message: string,
-  errors: any[] = [],
+  errors: string[] = [],
 ): Response => {
   return res.status(statusCode).json({
     success: false,
+    statusCode,
     message,
     errors,
   });

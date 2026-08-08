@@ -15,7 +15,7 @@ export const errorMiddleware = (
 ): void => {
   let statusCode = 500;
   let message = "Internal Server Error";
-  let errors: any[] = [];
+  let errors: string[] = [];
 
   if (err instanceof AppError) {
     statusCode = err.statusCode;
@@ -30,6 +30,9 @@ export const errorMiddleware = (
   } else if (err.name === "TokenExpiredError") {
     statusCode = 401;
     message = "Token expired. Please log in again.";
+  } else if (err.name === "MulterError") {
+    statusCode = 400;
+    message = err.message;
   } else if (err instanceof Error) {
     message =
       env.NODE_ENV === "development" ? err.message : "Internal Server Error";

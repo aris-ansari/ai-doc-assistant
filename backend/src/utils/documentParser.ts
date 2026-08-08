@@ -31,8 +31,11 @@ export async function parseDocumentText(
     }
 
     throw new AppError(`Unsupported document MIME type: ${mimeType}`, 400);
-  } catch (error: any) {
+  } catch (error: unknown) {
     if (error instanceof AppError) throw error;
-    throw new AppError(`Failed to parse file text: ${error.message}`, 500);
+    throw new AppError(
+      `Failed to parse file text: ${error instanceof Error ? error.message : String(error)}`,
+      500,
+    );
   }
 }

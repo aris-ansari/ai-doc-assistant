@@ -1,4 +1,4 @@
-import fs from "fs";
+import fs from "fs/promises";
 import "multer";
 import {
   documentRepository,
@@ -28,7 +28,7 @@ export class DocumentService {
     const documentName = title || file.originalname;
 
     const document = await this.documentRepo.create({
-      userId: userId as any,
+      userId,
       title: documentName,
       originalName: file.originalname,
       mimeType: file.mimetype,
@@ -73,8 +73,13 @@ export class DocumentService {
     await vectorDbService.deleteByDocumentId(documentId);
 
     // Remove local file from storage disk
-    if (fs.existsSync(document.filePath)) {
-      fs.unlinkSync(document.filePath);
+    try {
+      await fs.unlink(document.filePath);
+    } catch (error) {
+      const code = error instanceof Error && "code" in error ? error.code : undefined;
+      if (code !== "ENOENT") {
+        throw error;
+      }
     }
 
     await this.documentRepo.delete(documentId);

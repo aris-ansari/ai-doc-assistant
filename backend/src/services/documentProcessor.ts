@@ -59,11 +59,11 @@ export class DocumentProcessor {
         status: "completed",
         content: extractedText,
       });
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error(`Error processing document ${documentId}:`, error);
       await documentRepository.update(documentId, {
         status: "failed",
-        errorMessage: error.message || "Failed to process document",
+        errorMessage: error instanceof Error ? error.message : "Failed to process document",
       });
     }
   }
