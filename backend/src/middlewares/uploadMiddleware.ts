@@ -1,7 +1,7 @@
 import multer from "multer";
 import path from "path";
 import fs from "fs";
-import { AppError } from "../utils/AppError";
+import { AppError } from "../utils/AppError.js";
 
 // Ensure the uploads directory exists
 const uploadDir = path.join(process.cwd(), "uploads");

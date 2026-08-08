@@ -2,7 +2,7 @@ import {
   ConversationModel,
   IConversation,
   IMessage,
-} from "../models/Conversation";
+} from "../models/Conversation.js";
 
 export class ConversationRepository {
   async create(data: {

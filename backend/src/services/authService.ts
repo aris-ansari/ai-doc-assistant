@@ -1,8 +1,8 @@
 import bcrypt from "bcryptjs";
-import { userRepository, UserRepository } from "../repositories/userRepository";
-import { generateTokens, verifyRefreshToken } from "../utils/jwt";
-import { AppError } from "../utils/AppError";
-import { IUser } from "../models/User";
+import { userRepository, UserRepository } from "../repositories/userRepository.js";
+import { generateTokens, verifyRefreshToken } from "../utils/jwt.js";
+import { AppError } from "../utils/AppError.js";
+import { IUser } from "../models/User.js";
 
 export class AuthService {
   private userRepo: UserRepository;

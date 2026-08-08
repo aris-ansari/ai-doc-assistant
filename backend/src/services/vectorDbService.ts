@@ -1,6 +1,6 @@
 import { ChromaClient, Collection } from "chromadb";
-import { env } from "../config/env";
-import { AppError } from "../utils/AppError";
+import { env } from "../config/env.js";
+import { AppError } from "../utils/AppError.js";
 
 export class VectorDbService {
   private client: ChromaClient;

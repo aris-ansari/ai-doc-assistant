@@ -3,11 +3,11 @@ import "multer";
 import {
   documentRepository,
   DocumentRepository,
-} from "../repositories/documentRepository";
-import { documentProcessor } from "./documentProcessor";
-import { vectorDbService } from "./vectorDbService";
-import { AppError } from "../utils/AppError";
-import { IDocument } from "../models/Document";
+} from "../repositories/documentRepository.js";
+import { documentProcessor } from "./documentProcessor.js";
+import { vectorDbService } from "./vectorDbService.js";
+import { AppError } from "../utils/AppError.js";
+import { IDocument } from "../models/Document.js";
 
 export class DocumentService {
   private documentRepo: DocumentRepository;

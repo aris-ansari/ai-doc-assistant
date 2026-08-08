@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { env } from "./env";
+import { env } from "./env.js";
 
 /**
  * Establishes connection to MongoDB instance using Mongoose.

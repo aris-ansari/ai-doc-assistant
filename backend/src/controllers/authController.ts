@@ -1,9 +1,9 @@
 import { Request, Response } from "express";
-import { authService } from "../services/authService";
-import { sendSuccess } from "../utils/apiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
-import { AuthenticatedRequest } from "../middlewares/authMiddleware";
-import { env } from "../config/env";
+import { authService } from "../services/authService.js";
+import { sendSuccess } from "../utils/apiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { AuthenticatedRequest } from "../middlewares/authMiddleware.js";
+import { env } from "../config/env.js";
 
 const COOKIE_OPTIONS = {
   httpOnly: true,

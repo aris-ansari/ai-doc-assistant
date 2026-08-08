@@ -3,11 +3,11 @@ import cors from "cors";
 import helmet from "helmet";
 import morgan from "morgan";
 import cookieParser from "cookie-parser";
-import { env } from "./config/env";
-import { errorMiddleware } from "./middlewares/errorMiddleware";
-import authRoutes from "./routes/authRoutes";
-import documentRoutes from "./routes/documentRoutes";
-import chatRoutes from "./routes/chatRoutes";
+import { env } from "./config/env.js";
+import { errorMiddleware } from "./middlewares/errorMiddleware.js";
+import authRoutes from "./routes/authRoutes.js";
+import documentRoutes from "./routes/documentRoutes.js";
+import chatRoutes from "./routes/chatRoutes.js";
 
 const app: Application = express();
 

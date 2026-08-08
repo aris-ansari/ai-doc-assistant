@@ -1,4 +1,4 @@
-import { DocumentModel, IDocument } from "../models/Document";
+import { DocumentModel, IDocument } from "../models/Document.js";
 
 export class DocumentRepository {
   async create(documentData: Partial<IDocument>): Promise<IDocument> {

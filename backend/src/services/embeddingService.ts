@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { env } from "../config/env";
-import { AppError } from "../utils/AppError";
+import { env } from "../config/env.js";
+import { AppError } from "../utils/AppError.js";
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
 const embeddingModel = genAI.getGenerativeModel({

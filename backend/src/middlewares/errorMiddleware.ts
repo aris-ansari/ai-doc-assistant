@@ -1,7 +1,7 @@
-import { Request, Response, NextFunction } from "express";
-import { AppError } from "../utils/AppError";
-import { sendError } from "../utils/apiResponse";
-import { env } from "../config/env";
+import type { Request, Response, NextFunction } from "express";
+import { AppError } from "../utils/AppError.js";
+import { sendError } from "../utils/apiResponse.js";
+import { env } from "../config/env.js";
 
 /**
  * Centralized error-handling middleware for Express.

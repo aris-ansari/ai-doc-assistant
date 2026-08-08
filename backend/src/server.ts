@@ -1,6 +1,9 @@
-import app from "./app";
-import { connectDB } from "./config/db";
-import { env } from "./config/env";
+import dns from "dns";
+import app from "./app.js";
+import { connectDB } from "./config/db.js";
+import { env } from "./config/env.js";
+
+dns.setServers(["8.8.8.8", "1.1.1.1"]);
 
 /**
  * Bootstraps database connection and starts Express HTTP server.

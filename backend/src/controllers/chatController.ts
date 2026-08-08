@@ -1,8 +1,8 @@
 import { Response } from "express";
-import { ragService } from "../services/ragService";
-import { sendSuccess } from "../utils/apiResponse";
-import { asyncHandler } from "../utils/asyncHandler";
-import { AuthenticatedRequest } from "../middlewares/authMiddleware";
+import { ragService } from "../services/ragService.js";
+import { sendSuccess } from "../utils/apiResponse.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
+import { AuthenticatedRequest } from "../middlewares/authMiddleware.js";
 
 export class ChatController {
   createConversation = asyncHandler(

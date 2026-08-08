@@ -1,7 +1,7 @@
 import fs from "fs/promises";
 import pdfParse from "pdf-parse";
 import mammoth from "mammoth";
-import { AppError } from "./AppError";
+import { AppError } from "./AppError.js";
 
 /**
  * Parses and extracts plain text from supported document types (PDF, DOCX, TXT).

@@ -1,7 +1,7 @@
 import { Request, Response, NextFunction } from "express";
-import { AppError } from "../utils/AppError";
-import { verifyAccessToken } from "../utils/jwt";
-import { asyncHandler } from "../utils/asyncHandler";
+import { AppError } from "../utils/AppError.js";
+import { verifyAccessToken } from "../utils/jwt.js";
+import { asyncHandler } from "../utils/asyncHandler.js";
 
 export interface AuthenticatedRequest extends Request {
   user?: {

@@ -1,10 +1,10 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
-import { env } from "../config/env";
-import { embeddingService } from "./embeddingService";
-import { vectorDbService } from "./vectorDbService";
-import { conversationRepository } from "../repositories/conversationRepository";
-import { AppError } from "../utils/AppError";
-import { IConversation, ISourceCitation } from "../models/Conversation";
+import { env } from "../config/env.js";
+import { embeddingService } from "./embeddingService.js";
+import { vectorDbService } from "./vectorDbService.js";
+import { conversationRepository } from "../repositories/conversationRepository.js";
+import { AppError } from "../utils/AppError.js";
+import { IConversation, ISourceCitation } from "../models/Conversation.js";
 
 const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
 

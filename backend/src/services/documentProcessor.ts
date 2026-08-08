@@ -1,8 +1,8 @@
-import { parseDocumentText } from "../utils/documentParser";
-import { chunkText } from "../utils/textSplitter";
-import { embeddingService } from "./embeddingService";
-import { vectorDbService } from "./vectorDbService";
-import { documentRepository } from "../repositories/documentRepository";
+import { parseDocumentText } from "../utils/documentParser.js";
+import { chunkText } from "../utils/textSplitter.js";
+import { embeddingService } from "./embeddingService.js";
+import { vectorDbService } from "./vectorDbService.js";
+import { documentRepository } from "../repositories/documentRepository.js";
 
 export class DocumentProcessor {
   /**

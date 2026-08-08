@@ -1,5 +1,5 @@
-import jwt, { Secret, SignOptions } from "jsonwebtoken";
-import { env } from "../config/env";
+import jwt, { type Secret, type SignOptions } from "jsonwebtoken";
+import { env } from "../config/env.js";
 
 export interface TokenPayload {
   userId: string;
