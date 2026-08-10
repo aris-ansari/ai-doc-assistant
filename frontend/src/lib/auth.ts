@@ -18,18 +18,12 @@ export const getCurrentUser = async (): Promise<User> => {
 };
 
 export const login = async (input: LoginInput): Promise<User> => {
-  const response = await api.post<ApiResponse<AuthPayload>>(
-    "/auth/login",
-    input,
-  );
+  const response = await api.post<ApiResponse<AuthPayload>>("/auth/login", input);
   return response.data.data.user;
 };
 
 export const register = async (input: RegisterInput): Promise<User> => {
-  const response = await api.post<ApiResponse<AuthPayload>>(
-    "/auth/register",
-    input,
-  );
+  const response = await api.post<ApiResponse<AuthPayload>>("/auth/register", input);
   return response.data.data.user;
 };
 

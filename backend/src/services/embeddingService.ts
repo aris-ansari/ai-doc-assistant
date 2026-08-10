@@ -1,20 +1,31 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { env } from "../config/env.js";
 import { AppError } from "../utils/AppError.js";
 
-const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
-const embeddingModel = genAI.getGenerativeModel({
-  model: "text-embedding-004",
-});
+const genAI = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 
 export class EmbeddingService {
   /**
-   * Generates a vector embedding array for a single string of text using Gemini.
+   * Generates a fixed-size vector embedding using Gemini Embedding 2.
+   * The dimensionality is configured so it remains compatible with the
+   * ChromaDB collection used by the document workspace.
    */
   async generateEmbedding(text: string): Promise<number[]> {
     try {
-      const result = await embeddingModel.embedContent(text);
-      return result.embedding.values;
+      const response = await genAI.models.embedContent({
+        model: env.GEMINI_EMBEDDING_MODEL,
+        contents: text,
+        config: {
+          outputDimensionality: env.GEMINI_EMBEDDING_DIMENSIONS,
+        },
+      });
+
+      const values = response.embeddings?.[0]?.values;
+      if (!values?.length) {
+        throw new Error("Gemini returned an empty embedding");
+      }
+
+      return values;
     } catch (error: unknown) {
       throw new AppError(
         `Failed to generate embedding: ${error instanceof Error ? error.message : String(error)}`,
@@ -29,8 +40,7 @@ export class EmbeddingService {
   async generateBatchEmbeddings(texts: string[]): Promise<number[][]> {
     const embeddings: number[][] = [];
     for (const text of texts) {
-      const embedding = await this.generateEmbedding(text);
-      embeddings.push(embedding);
+      embeddings.push(await this.generateEmbedding(text));
     }
     return embeddings;
   }

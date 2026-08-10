@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 import { env } from "../config/env.js";
 import { embeddingService } from "./embeddingService.js";
 import { vectorDbService } from "./vectorDbService.js";
@@ -7,7 +7,7 @@ import { documentRepository } from "../repositories/documentRepository.js";
 import { AppError } from "../utils/AppError.js";
 import type { IConversation, IMessage, ISourceCitation } from "../models/Conversation.js";
 
-const genAI = new GoogleGenerativeAI(env.GEMINI_API_KEY);
+const genAI = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 
 export class RagService {
   async createConversation(
@@ -133,9 +133,15 @@ Instructions:
 - If the answer cannot be found in the context, clearly state that based on the provided documents.
 - Keep responses clear, concise, and helpful.`;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
-    const response = await model.generateContent(prompt);
-    const assistantAnswer = response.response.text();
+    const response = await genAI.models.generateContent({
+      model: env.GEMINI_CHAT_MODEL,
+      contents: prompt,
+    });
+    const assistantAnswer = response.text?.trim();
+
+    if (!assistantAnswer) {
+      throw new AppError("Gemini returned an empty response", 502);
+    }
 
     // 5. Append messages to database history
     await conversationRepository.addMessage(conversationId, {
