@@ -2,7 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertCircle, FileCheck2, FileClock, FileText, LogOut, RefreshCw } from "lucide-react";
+import { AlertCircle, FileCheck2, FileClock, FileText, LogOut, MessageSquare, RefreshCw } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { deleteDocument, getDocuments, uploadDocument } from "@/lib/documents";
 import { getApiErrorMessage } from "@/lib/apiError";
@@ -96,6 +96,15 @@ export default function DashboardPage() {
             <h1 className="mt-1 text-3xl font-semibold tracking-tight text-slate-950">Welcome, {user?.name}</h1>
             <p className="mt-2 text-sm text-slate-500">Upload documents and let the workspace prepare them for grounded AI conversations.</p>
           </div>
+          <div className="flex items-center gap-2">
+          <button
+            type="button"
+            onClick={() => router.push("/chat")}
+            className="inline-flex w-fit items-center gap-2 rounded-lg border border-slate-200 bg-white px-3.5 py-2.5 text-sm font-medium text-slate-700 shadow-sm hover:bg-slate-50"
+          >
+            <MessageSquare size={15} />
+            Open RAG chat
+          </button>
           <button
             type="button"
             onClick={() => void documentsQuery.refetch()}
@@ -105,6 +114,7 @@ export default function DashboardPage() {
             <RefreshCw size={15} className={documentsQuery.isFetching ? "animate-spin" : undefined} />
             Refresh
           </button>
+          </div>
         </div>
 
         <div className="mt-8 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
