@@ -1,7 +1,7 @@
-import { Schema, model, Document as MongooseDocument } from "mongoose";
+import { Schema, model, Types, Document as MongooseDocument } from "mongoose";
 
 export interface IDocument extends MongooseDocument {
-  userId: Schema.Types.ObjectId;
+  userId: Types.ObjectId;
   title: string;
   originalName: string;
   mimeType: string;

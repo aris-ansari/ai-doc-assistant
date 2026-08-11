@@ -24,7 +24,6 @@ const envSchema = z.object({
   GEMINI_EMBEDDING_MODEL: z.string().default("gemini-embedding-2"),
   GEMINI_EMBEDDING_DIMENSIONS: z.coerce.number().int().positive().default(768),
   GEMINI_CHAT_MODEL: z.string().default("gemini-3.6-flash"),
-  CHROMA_URL: z.string().default("http://localhost:8000"),
 
   // CORS
   CLIENT_URL: z.string().default("http://localhost:3000"),

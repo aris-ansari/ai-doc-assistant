@@ -7,7 +7,7 @@ import { documentRepository } from "../repositories/documentRepository.js";
 export class DocumentProcessor {
   /**
    * Orchestrates full document pipeline: text extraction, chunking,
-   * Gemini embedding generation, and ChromaDB vector storage.
+   * Gemini embedding generation, and MongoDB vector storage.
    */
   async processDocument(documentId: string): Promise<void> {
     try {
@@ -51,7 +51,7 @@ export class DocumentProcessor {
         },
       }));
 
-      // 4. Store vectors and metadata in ChromaDB
+      // 4. Store vectors and metadata in MongoDB
       await vectorDbService.addChunks(vectorData);
 
       // 5. Update document status to completed
@@ -63,7 +63,8 @@ export class DocumentProcessor {
       console.error(`Error processing document ${documentId}:`, error);
       await documentRepository.update(documentId, {
         status: "failed",
-        errorMessage: error instanceof Error ? error.message : "Failed to process document",
+        errorMessage:
+          error instanceof Error ? error.message : "Failed to process document",
       });
     }
   }

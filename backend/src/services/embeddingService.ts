@@ -7,8 +7,8 @@ const genAI = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 export class EmbeddingService {
   /**
    * Generates a fixed-size vector embedding using Gemini Embedding 2.
-   * The dimensionality is configured so it remains compatible with the
-   * ChromaDB collection used by the document workspace.
+   * The dimensionality is configured to remain compatible with the
+   * MongoDB Atlas Vector Search index used by the document workspace.
    */
   async generateEmbedding(text: string): Promise<number[]> {
     try {

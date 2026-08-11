@@ -8,6 +8,7 @@ import { documentProcessor } from "./documentProcessor.js";
 import { vectorDbService } from "./vectorDbService.js";
 import { AppError } from "../utils/AppError.js";
 import { IDocument } from "../models/Document.js";
+import { Types } from "mongoose";
 
 export class DocumentService {
   private documentRepo: DocumentRepository;
@@ -28,7 +29,7 @@ export class DocumentService {
     const documentName = title || file.originalname;
 
     const document = await this.documentRepo.create({
-      userId,
+      userId: new Types.ObjectId(userId),
       title: documentName,
       originalName: file.originalname,
       mimeType: file.mimetype,
@@ -69,7 +70,7 @@ export class DocumentService {
   async deleteDocument(userId: string, documentId: string): Promise<void> {
     const document = await this.getDocumentById(userId, documentId);
 
-    // Delete associated vector embeddings from ChromaDB
+    // Delete associated vector embeddings from MongoDB
     await vectorDbService.deleteByDocumentId(documentId);
 
     // Remove local file from storage disk

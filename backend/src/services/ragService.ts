@@ -5,7 +5,11 @@ import { vectorDbService } from "./vectorDbService.js";
 import { conversationRepository } from "../repositories/conversationRepository.js";
 import { documentRepository } from "../repositories/documentRepository.js";
 import { AppError } from "../utils/AppError.js";
-import type { IConversation, IMessage, ISourceCitation } from "../models/Conversation.js";
+import type {
+  IConversation,
+  IMessage,
+  ISourceCitation,
+} from "../models/Conversation.js";
 
 const genAI = new GoogleGenAI({ apiKey: env.GEMINI_API_KEY });
 
@@ -61,6 +65,14 @@ export class RagService {
       ? documentIds
       : conversation.documentIds.map((id) => id.toString());
 
+    console.log("========== RAG DEBUG ==========");
+    console.log("conversationId:", conversationId);
+    console.log("request documentIds:", documentIds);
+    console.log("conversation documentIds:", conversation.documentIds);
+    console.log("activeDocIds:", activeDocIds);
+    console.log("userId:", userId);
+    console.log("================================");
+
     const ownedDocuments = await documentRepository.findByIdsAndUserId(
       activeDocIds,
       userId,
@@ -75,18 +87,19 @@ export class RagService {
     // 1. Generate query vector embedding
     const queryEmbedding = await embeddingService.generateEmbedding(userQuery);
 
-    // 2. Query ChromaDB vector store for matching document chunks
+    // 2. Query MongoDB Atlas Vector Search for matching document chunks
     let whereFilter: Record<string, unknown>;
+
     if (activeDocIds.length === 1) {
       whereFilter = {
-        $and: [{ userId }, { documentId: activeDocIds[0] }],
+        documentId: activeDocIds[0],
       };
     } else if (activeDocIds.length > 1) {
       whereFilter = {
-        $and: [{ userId }, { documentId: { $in: activeDocIds } }],
+        documentId: { $in: activeDocIds },
       };
     } else {
-      whereFilter = { userId };
+      throw new AppError("No documents selected for this conversation", 400);
     }
 
     const queryResult = await vectorDbService.querySimilarity(
@@ -94,6 +107,12 @@ export class RagService {
       5,
       whereFilter,
     );
+
+    console.log("========== MONGODB VECTOR SEARCH RESULT ==========");
+    console.log("whereFilter:", JSON.stringify(whereFilter));
+    console.log("result documents:", queryResult.documents);
+    console.log("result metadatas:", queryResult.metadatas);
+    console.log("===================================");
 
     // 3. Extract relevant chunks & build citations
     const contextSnippets: string[] = [];
@@ -111,7 +130,10 @@ export class RagService {
           if (typeof metadata?.documentId === "string") {
             sources.push({
               documentId: metadata.documentId,
-              chunkIndex: typeof metadata.chunkIndex === "number" ? metadata.chunkIndex : idx,
+              chunkIndex:
+                typeof metadata.chunkIndex === "number"
+                  ? metadata.chunkIndex
+                  : idx,
               snippet: docText.substring(0, 150) + "...",
             });
           }
