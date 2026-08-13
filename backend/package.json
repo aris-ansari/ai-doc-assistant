@@ -10,7 +10,8 @@
     "lint": "eslint src/**/*.ts",
     "format": "prettier --write \"src/**/*.ts\"",
     "verify:api": "node scripts/verify-api.mjs",
-    "verify:gemini": "node scripts/verify-gemini.mjs"
+    "verify:gemini": "node scripts/verify-gemini.mjs",
+    "test": "node --import tsx --test"
   },
   "type": "module",
   "dependencies": {
