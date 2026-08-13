@@ -2,11 +2,15 @@ import api from "./api";
 import type { ApiResponse, DocumentRecord } from "./types";
 
 export const getDocuments = async (): Promise<DocumentRecord[]> => {
-  const response = await api.get<ApiResponse<{ documents: DocumentRecord[] }>>("/documents");
+  const response =
+    await api.get<ApiResponse<{ documents: DocumentRecord[] }>>("/documents");
   return response.data.data.documents;
 };
 
-export const uploadDocument = async (file: File, title?: string): Promise<DocumentRecord> => {
+export const uploadDocument = async (
+  file: File,
+  title?: string,
+): Promise<DocumentRecord> => {
   const formData = new FormData();
   formData.append("file", file);
 

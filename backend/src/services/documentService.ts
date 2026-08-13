@@ -67,8 +67,47 @@ export class DocumentService {
     return document;
   }
 
+  async retryDocumentProcessing(
+    userId: string,
+    documentId: string,
+  ): Promise<IDocument> {
+    const document = await this.getDocumentById(userId, documentId);
+
+    if (document.status === "processing") {
+      throw new AppError(
+        "Document is already being processed. Please wait until processing finishes.",
+        409,
+      );
+    }
+
+    if (document.status === "completed") {
+      throw new AppError(
+        "Document has already been processed successfully.",
+        409,
+      );
+    }
+
+    // Start the same processor used by the upload flow. The processor owns
+    // status transitions, vector cleanup, and failure handling.
+    documentProcessor.processDocument(documentId).catch((err) => {
+      console.error(`Retry processing failed for ${documentId}:`, err);
+    });
+
+    return (await this.documentRepo.findById(documentId)) ?? document;
+  }
+
   async deleteDocument(userId: string, documentId: string): Promise<void> {
     const document = await this.getDocumentById(userId, documentId);
+
+    // Do not delete a document while its background processor is reading the
+    // file or writing vectors. Otherwise the processor could finish after the
+    // deletion and recreate orphaned chunks for a document that no longer exists.
+    if (document.status === "processing") {
+      throw new AppError(
+        "Document is still processing. Please wait until processing finishes before deleting it.",
+        409,
+      );
+    }
 
     // Delete associated vector embeddings from MongoDB
     await vectorDbService.deleteByDocumentId(documentId);
@@ -77,7 +116,8 @@ export class DocumentService {
     try {
       await fs.unlink(document.filePath);
     } catch (error) {
-      const code = error instanceof Error && "code" in error ? error.code : undefined;
+      const code =
+        error instanceof Error && "code" in error ? error.code : undefined;
       if (code !== "ENOENT") {
         throw error;
       }

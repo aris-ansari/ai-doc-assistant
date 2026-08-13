@@ -61,15 +61,21 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
       setSelectedFile(null);
       setTitle("");
     } catch (uploadError) {
-      setError(getApiErrorMessage(uploadError, "Upload failed. Please try again."));
+      setError(
+        getApiErrorMessage(uploadError, "Upload failed. Please try again."),
+      );
     }
   };
 
   return (
     <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
       <div className="mb-5">
-        <h2 className="text-base font-semibold text-slate-950">Add a document</h2>
-        <p className="mt-1 text-sm text-slate-500">Upload a PDF, DOCX, or TXT file up to 10 MB.</p>
+        <h2 className="text-base font-semibold text-slate-950">
+          Add a document
+        </h2>
+        <p className="mt-1 text-sm text-slate-500">
+          Upload a PDF, DOCX, or TXT file up to 10 MB.
+        </p>
       </div>
 
       <div
@@ -77,7 +83,8 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
         tabIndex={0}
         onClick={() => inputRef.current?.click()}
         onKeyDown={(event) => {
-          if (event.key === "Enter" || event.key === " ") inputRef.current?.click();
+          if (event.key === "Enter" || event.key === " ")
+            inputRef.current?.click();
         }}
         onDragEnter={(event) => {
           event.preventDefault();
@@ -105,8 +112,12 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm ring-1 ring-slate-200">
           <UploadCloud size={22} />
         </span>
-        <p className="mt-4 text-sm font-medium text-slate-900">Drop a file here or click to browse</p>
-        <p className="mt-1 text-xs text-slate-500">PDF, DOCX, TXT · 10 MB maximum</p>
+        <p className="mt-4 text-sm font-medium text-slate-900">
+          Drop a file here or click to browse
+        </p>
+        <p className="mt-1 text-xs text-slate-500">
+          PDF, DOCX, TXT · 10 MB maximum
+        </p>
       </div>
 
       {selectedFile && (
@@ -116,8 +127,12 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
               <FileText size={18} />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-slate-900">{selectedFile.name}</p>
-              <p className="mt-0.5 text-xs text-slate-500">{formatFileSize(selectedFile.size)}</p>
+              <p className="truncate text-sm font-medium text-slate-900">
+                {selectedFile.name}
+              </p>
+              <p className="mt-0.5 text-xs text-slate-500">
+                {formatFileSize(selectedFile.size)}
+              </p>
             </div>
             <button
               type="button"
@@ -134,7 +149,10 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
           </div>
 
           <label className="mt-4 block">
-            <span className="text-sm font-medium text-slate-700">Title <span className="font-normal text-slate-400">(optional)</span></span>
+            <span className="text-sm font-medium text-slate-700">
+              Title{" "}
+              <span className="font-normal text-slate-400">(optional)</span>
+            </span>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}

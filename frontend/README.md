@@ -1,6 +1,6 @@
 # AI Document Workspace — Frontend
 
-Next.js App Router frontend for the Enterprise AI RAG Document Workspace.
+Next.js App Router frontend for the AI Document Assistant.
 
 ## Phase 8 — Document Management
 

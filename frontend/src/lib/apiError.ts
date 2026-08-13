@@ -5,7 +5,10 @@ interface ApiErrorBody {
   errors?: string[];
 }
 
-export function getApiErrorMessage(error: unknown, fallback = "Something went wrong. Please try again."): string {
+export function getApiErrorMessage(
+  error: unknown,
+  fallback = "Something went wrong. Please try again.",
+): string {
   if (axios.isAxiosError<ApiErrorBody>(error)) {
     const message = error.response?.data?.message;
     if (message) return message;

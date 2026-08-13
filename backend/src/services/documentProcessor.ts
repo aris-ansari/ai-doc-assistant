@@ -16,7 +16,14 @@ export class DocumentProcessor {
         throw new Error(`Document ${documentId} not found`);
       }
 
-      await documentRepository.update(documentId, { status: "processing" });
+      await documentRepository.update(documentId, {
+        status: "processing",
+        errorMessage: undefined,
+      });
+
+      // Remove vectors from an earlier failed/retried processing attempt before
+      // generating the replacement set. This keeps retries idempotent.
+      await vectorDbService.deleteByDocumentId(documentId);
 
       // 1. Extract raw text from file
       const extractedText = await parseDocumentText(
@@ -27,12 +34,8 @@ export class DocumentProcessor {
       // 2. Break text into overlapping chunks
       const chunks = chunkText(extractedText);
 
-      if (chunks.length === 0) {
-        await documentRepository.update(documentId, {
-          status: "completed",
-          content: "",
-        });
-        return;
+      if (extractedText.trim().length === 0 || chunks.length === 0) {
+        throw new Error("Document contains no extractable text.");
       }
 
       // 3. Generate Gemini vector embeddings for chunks
@@ -61,6 +64,18 @@ export class DocumentProcessor {
       });
     } catch (error: unknown) {
       console.error(`Error processing document ${documentId}:`, error);
+
+      // A vector write can fail after inserting some chunks. Remove any
+      // partial result so a later retry starts from a clean state.
+      try {
+        await vectorDbService.deleteByDocumentId(documentId);
+      } catch (cleanupError: unknown) {
+        console.error(
+          `Failed to clean up vectors for document ${documentId}:`,
+          cleanupError,
+        );
+      }
+
       await documentRepository.update(documentId, {
         status: "failed",
         errorMessage:

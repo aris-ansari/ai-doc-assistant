@@ -65,14 +65,6 @@ export class RagService {
       ? documentIds
       : conversation.documentIds.map((id) => id.toString());
 
-    console.log("========== RAG DEBUG ==========");
-    console.log("conversationId:", conversationId);
-    console.log("request documentIds:", documentIds);
-    console.log("conversation documentIds:", conversation.documentIds);
-    console.log("activeDocIds:", activeDocIds);
-    console.log("userId:", userId);
-    console.log("================================");
-
     const ownedDocuments = await documentRepository.findByIdsAndUserId(
       activeDocIds,
       userId,
@@ -107,12 +99,6 @@ export class RagService {
       5,
       whereFilter,
     );
-
-    console.log("========== MONGODB VECTOR SEARCH RESULT ==========");
-    console.log("whereFilter:", JSON.stringify(whereFilter));
-    console.log("result documents:", queryResult.documents);
-    console.log("result metadatas:", queryResult.metadatas);
-    console.log("===================================");
 
     // 3. Extract relevant chunks & build citations
     const contextSnippets: string[] = [];

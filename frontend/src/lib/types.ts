@@ -18,7 +18,6 @@ export interface AuthPayload {
   user: User;
 }
 
-
 export type DocumentStatus = "pending" | "processing" | "completed" | "failed";
 
 export interface DocumentRecord {

@@ -2,8 +2,11 @@ import "dotenv/config";
 import { GoogleGenAI } from "@google/genai";
 
 const apiKey = process.env.GEMINI_API_KEY;
-const embeddingModel = process.env.GEMINI_EMBEDDING_MODEL || "gemini-embedding-2";
-const embeddingDimensions = Number(process.env.GEMINI_EMBEDDING_DIMENSIONS || 768);
+const embeddingModel =
+  process.env.GEMINI_EMBEDDING_MODEL || "gemini-embedding-2";
+const embeddingDimensions = Number(
+  process.env.GEMINI_EMBEDDING_DIMENSIONS || 768,
+);
 const chatModel = process.env.GEMINI_CHAT_MODEL || "gemini-3.6-flash";
 
 if (!apiKey) {
@@ -25,7 +28,9 @@ try {
     throw new Error("Embedding response did not contain vector values");
   }
 
-  console.log(`Embedding OK: ${embeddingModel} -> ${embedding.length} dimensions`);
+  console.log(
+    `Embedding OK: ${embeddingModel} -> ${embedding.length} dimensions`,
+  );
 
   const chatResponse = await ai.models.generateContent({
     model: chatModel,

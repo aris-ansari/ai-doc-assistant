@@ -2,7 +2,14 @@
 
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { ReactNode, createContext, useCallback, useContext } from "react";
-import { getCurrentUser, login, logout, register, LoginInput, RegisterInput } from "@/lib/auth";
+import {
+  getCurrentUser,
+  login,
+  logout,
+  register,
+  LoginInput,
+  RegisterInput,
+} from "@/lib/auth";
 import type { User } from "@/lib/types";
 
 interface AuthContextValue {
@@ -24,17 +31,23 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     retry: false,
   });
 
-  const signIn = useCallback(async (input: LoginInput) => {
-    const user = await login(input);
-    queryClient.setQueryData(["auth", "me"], user);
-    return user;
-  }, [queryClient]);
+  const signIn = useCallback(
+    async (input: LoginInput) => {
+      const user = await login(input);
+      queryClient.setQueryData(["auth", "me"], user);
+      return user;
+    },
+    [queryClient],
+  );
 
-  const signUp = useCallback(async (input: RegisterInput) => {
-    const user = await register(input);
-    queryClient.setQueryData(["auth", "me"], user);
-    return user;
-  }, [queryClient]);
+  const signUp = useCallback(
+    async (input: RegisterInput) => {
+      const user = await register(input);
+      queryClient.setQueryData(["auth", "me"], user);
+      return user;
+    },
+    [queryClient],
+  );
 
   const signOut = useCallback(async () => {
     await logout();

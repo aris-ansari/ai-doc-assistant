@@ -22,7 +22,20 @@ router.post(
   documentController.uploadDocument,
 );
 router.get("/", documentController.getDocuments);
-router.get("/:id", validate(documentIdSchema), documentController.getDocumentById);
-router.delete("/:id", validate(documentIdSchema), documentController.deleteDocument);
+router.get(
+  "/:id",
+  validate(documentIdSchema),
+  documentController.getDocumentById,
+);
+router.post(
+  "/:id/retry",
+  validate(documentIdSchema),
+  documentController.retryDocumentProcessing,
+);
+router.delete(
+  "/:id",
+  validate(documentIdSchema),
+  documentController.deleteDocument,
+);
 
 export default router;

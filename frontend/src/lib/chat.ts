@@ -26,12 +26,17 @@ export interface Conversation {
 }
 
 export const getConversations = async (): Promise<Conversation[]> => {
-  const response = await api.get<ApiResponse<{ conversations: Conversation[] }>>("/chat");
+  const response =
+    await api.get<ApiResponse<{ conversations: Conversation[] }>>("/chat");
   return response.data.data.conversations;
 };
 
-export const getConversation = async (conversationId: string): Promise<Conversation> => {
-  const response = await api.get<ApiResponse<{ conversation: Conversation }>>(`/chat/${conversationId}`);
+export const getConversation = async (
+  conversationId: string,
+): Promise<Conversation> => {
+  const response = await api.get<ApiResponse<{ conversation: Conversation }>>(
+    `/chat/${conversationId}`,
+  );
   return response.data.data.conversation;
 };
 
@@ -39,7 +44,10 @@ export const createConversation = async (input: {
   title?: string;
   documentIds?: string[];
 }): Promise<Conversation> => {
-  const response = await api.post<ApiResponse<{ conversation: Conversation }>>("/chat", input);
+  const response = await api.post<ApiResponse<{ conversation: Conversation }>>(
+    "/chat",
+    input,
+  );
   return response.data.data.conversation;
 };
 
@@ -47,13 +55,14 @@ export const sendMessage = async (
   conversationId: string,
   input: { message: string; documentIds?: string[] },
 ): Promise<{ conversation: Conversation; assistantMessage: ChatMessage }> => {
-  const response = await api.post<ApiResponse<{ conversation: Conversation; assistantMessage: ChatMessage }>>(
-    `/chat/${conversationId}/messages`,
-    input,
-  );
+  const response = await api.post<
+    ApiResponse<{ conversation: Conversation; assistantMessage: ChatMessage }>
+  >(`/chat/${conversationId}/messages`, input);
   return response.data.data;
 };
 
-export const deleteConversation = async (conversationId: string): Promise<void> => {
+export const deleteConversation = async (
+  conversationId: string,
+): Promise<void> => {
   await api.delete(`/chat/${conversationId}`);
 };

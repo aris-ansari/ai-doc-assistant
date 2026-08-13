@@ -1,5 +1,8 @@
 import bcrypt from "bcryptjs";
-import { userRepository, UserRepository } from "../repositories/userRepository.js";
+import {
+  userRepository,
+  UserRepository,
+} from "../repositories/userRepository.js";
 import { generateTokens, verifyRefreshToken } from "../utils/jwt.js";
 import { AppError } from "../utils/AppError.js";
 import { IUser } from "../models/User.js";

@@ -35,7 +35,10 @@ export function StatusBadge({ status }: { status: DocumentStatus }) {
     <span
       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ring-1 ring-inset ${config.className}`}
     >
-      <Icon size={13} className={status === "processing" ? "animate-spin" : undefined} />
+      <Icon
+        size={13}
+        className={status === "processing" ? "animate-spin" : undefined}
+      />
       {config.label}
     </span>
   );

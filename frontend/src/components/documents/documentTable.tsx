@@ -16,8 +16,13 @@ export function DocumentTable({ documents, onDelete }: DocumentTableProps) {
         <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-slate-100 text-slate-500">
           <FileText size={22} />
         </span>
-        <h3 className="mt-4 text-sm font-semibold text-slate-900">No documents yet</h3>
-        <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">Upload your first document above. Once processing completes, it will be available to the RAG chat.</p>
+        <h3 className="mt-4 text-sm font-semibold text-slate-900">
+          No documents yet
+        </h3>
+        <p className="mx-auto mt-1 max-w-sm text-sm text-slate-500">
+          Upload your first document above. Once processing completes, it will
+          be available to the RAG chat.
+        </p>
       </div>
     );
   }
@@ -37,26 +42,53 @@ export function DocumentTable({ documents, onDelete }: DocumentTableProps) {
           </thead>
           <tbody className="divide-y divide-slate-100">
             {documents.map((document) => (
-              <tr key={document._id} className="align-middle hover:bg-slate-50/70">
+              <tr
+                key={document._id}
+                className="align-middle hover:bg-slate-50/70"
+              >
                 <td className="max-w-sm px-5 py-4">
                   <div className="flex min-w-0 items-center gap-3">
                     <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-slate-100 text-slate-600">
                       <FileText size={17} />
                     </span>
                     <div className="min-w-0">
-                      <p className="truncate text-sm font-medium text-slate-900" title={document.title}>{document.title}</p>
-                      <p className="truncate text-xs text-slate-500" title={document.originalName}>{document.originalName}</p>
-                      {document.status === "failed" && document.errorMessage && (
-                        <p className="mt-1 line-clamp-2 text-xs text-red-600">{document.errorMessage}</p>
-                      )}
+                      <p
+                        className="truncate text-sm font-medium text-slate-900"
+                        title={document.title}
+                      >
+                        {document.title}
+                      </p>
+                      <p
+                        className="truncate text-xs text-slate-500"
+                        title={document.originalName}
+                      >
+                        {document.originalName}
+                      </p>
+                      {document.status === "failed" &&
+                        document.errorMessage && (
+                          <p className="mt-1 line-clamp-2 text-xs text-red-600">
+                            {document.errorMessage}
+                          </p>
+                        )}
                     </div>
                   </div>
                 </td>
-                <td className="whitespace-nowrap px-5 py-4"><StatusBadge status={document.status} /></td>
-                <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-500">{formatFileSize(document.size)}</td>
-                <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-500">{formatDate(document.createdAt)}</td>
+                <td className="whitespace-nowrap px-5 py-4">
+                  <StatusBadge status={document.status} />
+                </td>
+                <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-500">
+                  {formatFileSize(document.size)}
+                </td>
+                <td className="whitespace-nowrap px-5 py-4 text-sm text-slate-500">
+                  {formatDate(document.createdAt)}
+                </td>
                 <td className="whitespace-nowrap px-5 py-4 text-right">
-                  <button type="button" onClick={() => onDelete(document)} className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600" aria-label={`Delete ${document.title}`}>
+                  <button
+                    type="button"
+                    onClick={() => onDelete(document)}
+                    className="inline-flex items-center gap-1.5 rounded-lg px-2.5 py-2 text-sm font-medium text-slate-500 hover:bg-red-50 hover:text-red-600"
+                    aria-label={`Delete ${document.title}`}
+                  >
                     <Trash2 size={16} />
                     <span className="sr-only sm:not-sr-only">Delete</span>
                   </button>
@@ -71,7 +103,11 @@ export function DocumentTable({ documents, onDelete }: DocumentTableProps) {
 }
 
 function formatDate(value: string): string {
-  return new Intl.DateTimeFormat("en", { month: "short", day: "numeric", year: "numeric" }).format(new Date(value));
+  return new Intl.DateTimeFormat("en", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  }).format(new Date(value));
 }
 
 function formatFileSize(bytes: number): string {

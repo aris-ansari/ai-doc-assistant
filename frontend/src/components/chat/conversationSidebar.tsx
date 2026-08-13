@@ -12,12 +12,21 @@ interface ConversationSidebarProps {
   isDeleting: boolean;
 }
 
-export function ConversationSidebar({ conversations, activeId, onSelect, onNew, onDelete, isDeleting }: ConversationSidebarProps) {
+export function ConversationSidebar({
+  conversations,
+  activeId,
+  onSelect,
+  onNew,
+  onDelete,
+  isDeleting,
+}: ConversationSidebarProps) {
   return (
     <aside className="flex min-h-0 w-full flex-col border-b border-slate-200 bg-white lg:w-72 lg:border-b-0 lg:border-r">
       <div className="flex items-center justify-between border-b border-slate-200 p-4">
         <div>
-          <h2 className="text-sm font-semibold text-slate-950">Conversations</h2>
+          <h2 className="text-sm font-semibold text-slate-950">
+            Conversations
+          </h2>
           <p className="mt-0.5 text-xs text-slate-500">Your recent chats</p>
         </div>
         <button
@@ -37,10 +46,22 @@ export function ConversationSidebar({ conversations, activeId, onSelect, onNew, 
           </div>
         ) : (
           conversations.map((conversation) => (
-            <div key={conversation._id} className={`group flex items-center rounded-lg ${activeId === conversation._id ? "bg-slate-100" : "hover:bg-slate-50"}`}>
-              <button type="button" onClick={() => onSelect(conversation._id)} className="min-w-0 flex-1 px-3 py-2.5 text-left">
-                <p className="truncate text-sm font-medium text-slate-800">{conversation.title || "New Chat"}</p>
-                <p className="mt-0.5 text-xs text-slate-400">{conversation.messages.length} message{conversation.messages.length === 1 ? "" : "s"}</p>
+            <div
+              key={conversation._id}
+              className={`group flex items-center rounded-lg ${activeId === conversation._id ? "bg-slate-100" : "hover:bg-slate-50"}`}
+            >
+              <button
+                type="button"
+                onClick={() => onSelect(conversation._id)}
+                className="min-w-0 flex-1 px-3 py-2.5 text-left"
+              >
+                <p className="truncate text-sm font-medium text-slate-800">
+                  {conversation.title || "New Chat"}
+                </p>
+                <p className="mt-0.5 text-xs text-slate-400">
+                  {conversation.messages.length} message
+                  {conversation.messages.length === 1 ? "" : "s"}
+                </p>
               </button>
               <button
                 type="button"
