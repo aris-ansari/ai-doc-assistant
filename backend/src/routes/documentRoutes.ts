@@ -13,7 +13,6 @@ const documentIdSchema = z.object({
   }),
 });
 
-// Protect all document routes
 router.use(authenticate);
 
 router.post(
@@ -30,7 +29,7 @@ router.get(
 router.post(
   "/:id/retry",
   validate(documentIdSchema),
-  documentController.retryDocumentProcessing,
+  documentController.retryDocument,
 );
 router.delete(
   "/:id",

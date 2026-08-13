@@ -38,7 +38,6 @@ export class DocumentService {
       status: "pending",
     });
 
-    // Trigger asynchronous parsing and vector embedding in background
     documentProcessor.processDocument(document._id.toString()).catch((err) => {
       console.error(`Background processing failed for ${document._id}:`, err);
     });
@@ -67,41 +66,23 @@ export class DocumentService {
     return document;
   }
 
-  async retryDocumentProcessing(
-    userId: string,
-    documentId: string,
-  ): Promise<IDocument> {
+  async retryDocument(userId: string, documentId: string): Promise<void> {
     const document = await this.getDocumentById(userId, documentId);
 
     if (document.status === "processing") {
-      throw new AppError(
-        "Document is already being processed. Please wait until processing finishes.",
-        409,
-      );
+      throw new AppError("Document is already processing", 409);
     }
 
     if (document.status === "completed") {
-      throw new AppError(
-        "Document has already been processed successfully.",
-        409,
-      );
+      throw new AppError("Document has already completed processing", 409);
     }
 
-    // Start the same processor used by the upload flow. The processor owns
-    // status transitions, vector cleanup, and failure handling.
-    documentProcessor.processDocument(documentId).catch((err) => {
-      console.error(`Retry processing failed for ${documentId}:`, err);
-    });
-
-    return (await this.documentRepo.findById(documentId)) ?? document;
+    void documentProcessor.processDocument(documentId);
   }
 
   async deleteDocument(userId: string, documentId: string): Promise<void> {
     const document = await this.getDocumentById(userId, documentId);
 
-    // Do not delete a document while its background processor is reading the
-    // file or writing vectors. Otherwise the processor could finish after the
-    // deletion and recreate orphaned chunks for a document that no longer exists.
     if (document.status === "processing") {
       throw new AppError(
         "Document is still processing. Please wait until processing finishes before deleting it.",
@@ -109,10 +90,8 @@ export class DocumentService {
       );
     }
 
-    // Delete associated vector embeddings from MongoDB
     await vectorDbService.deleteByDocumentId(documentId);
 
-    // Remove local file from storage disk
     try {
       await fs.unlink(document.filePath);
     } catch (error) {

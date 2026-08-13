@@ -11,18 +11,20 @@ export class DocumentProcessor {
    */
   async processDocument(documentId: string): Promise<void> {
     try {
-      const document = await documentRepository.findById(documentId);
-      if (!document) {
+      const existingDocument = await documentRepository.findById(documentId);
+      if (!existingDocument) {
         throw new Error(`Document ${documentId} not found`);
       }
 
-      await documentRepository.update(documentId, {
-        status: "processing",
-        errorMessage: undefined,
-      });
+      // Atomically claim the document so two requests cannot process the same
+      // document at the same time.
+      const document = await documentRepository.claimForProcessing(documentId);
+      if (!document) {
+        return;
+      }
 
       // Remove vectors from an earlier failed/retried processing attempt before
-      // generating the replacement set. This keeps retries idempotent.
+      // generating the replacement set.
       await vectorDbService.deleteByDocumentId(documentId);
 
       // 1. Extract raw text from file
@@ -34,14 +36,18 @@ export class DocumentProcessor {
       // 2. Break text into overlapping chunks
       const chunks = chunkText(extractedText);
 
-      if (extractedText.trim().length === 0 || chunks.length === 0) {
-        throw new Error("Document contains no extractable text.");
+      if (chunks.length === 0) {
+        throw new Error("Document contains no extractable text");
       }
 
       // 3. Generate Gemini vector embeddings for chunks
       const chunkTexts = chunks.map((c) => c.text);
       const embeddings =
         await embeddingService.generateBatchEmbeddings(chunkTexts);
+
+      if (embeddings.length !== chunks.length) {
+        throw new Error("Embedding count does not match chunk count");
+      }
 
       const vectorData = chunks.map((chunk, index) => ({
         id: `${documentId}_chunk_${chunk.chunkIndex}`,
@@ -61,6 +67,7 @@ export class DocumentProcessor {
       await documentRepository.update(documentId, {
         status: "completed",
         content: extractedText,
+        errorMessage: undefined,
       });
     } catch (error: unknown) {
       console.error(`Error processing document ${documentId}:`, error);

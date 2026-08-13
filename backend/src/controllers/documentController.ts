@@ -54,21 +54,17 @@ export class DocumentController {
     },
   );
 
-  retryDocumentProcessing = asyncHandler(
+  retryDocument = asyncHandler(
     async (req: AuthenticatedRequest, res: Response): Promise<void> => {
       const userId = req.user!.userId;
       const { id } = req.params;
 
-      const document = await documentService.retryDocumentProcessing(
-        userId,
-        id,
-      );
+      await documentService.retryDocument(userId, id);
 
       sendSuccess({
         res,
         statusCode: 202,
-        message: "Document processing restarted",
-        data: { document },
+        message: "Document processing retry started",
       });
     },
   );

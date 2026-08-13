@@ -30,6 +30,20 @@ export class DocumentRepository {
     }).exec();
   }
 
+  async claimForProcessing(id: string): Promise<IDocument | null> {
+    return DocumentModel.findOneAndUpdate(
+      {
+        _id: id,
+        status: { $in: ["pending", "failed"] },
+      },
+      {
+        $set: { status: "processing" },
+        $unset: { errorMessage: "" },
+      },
+      { new: true },
+    ).exec();
+  }
+
   async delete(id: string): Promise<IDocument | null> {
     return DocumentModel.findByIdAndDelete(id).exec();
   }
