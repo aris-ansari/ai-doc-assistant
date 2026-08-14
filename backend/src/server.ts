@@ -3,11 +3,14 @@ import app from "./app.js";
 import { connectDB } from "./config/db.js";
 import { env } from "./config/env.js";
 
-dns.setServers(["8.8.8.8", "1.1.1.1"]);
+const dnsServers = process.env.DNS_SERVERS?.split(",").map((server) =>
+  server.trim(),
+);
 
-/**
- * Bootstraps database connection and starts Express HTTP server.
- */
+if (dnsServers?.length) {
+  dns.setServers(dnsServers);
+}
+
 const startServer = async () => {
   await connectDB();
 
