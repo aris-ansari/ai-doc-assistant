@@ -8,6 +8,8 @@ import {
   LogOut,
   MessageSquare,
   RefreshCw,
+  X,
+  Menu,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/providers/authProvider";
@@ -26,6 +28,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { ConversationSidebar } from "@/components/chat/conversationSidebar";
 import { DocumentSelector } from "@/components/chat/documentSelector";
 import { ChatWindow } from "@/components/chat/chatWindow";
+import { ThemeToggle } from "@/components/ui/themeToggle";
 
 export default function ChatPage() {
   const router = useRouter();
@@ -33,6 +36,7 @@ export default function ChatPage() {
   const { isLoading: authLoading, isAuthenticated, signOut } = useAuth();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [menuOpen, setMenuOpen] = useState(false);
   const [conversation, setConversation] = useState<Conversation | null>(null);
   const [error, setError] = useState<string | null>(null);
 
@@ -126,7 +130,7 @@ export default function ChatPage() {
 
   if (authLoading)
     return (
-      <main className="flex min-h-screen items-center justify-center bg-slate-50">
+      <main className="flex min-h-screen items-center justify-center bg-slate-50 dark:bg-[#0a0a0a]">
         <Spinner />
       </main>
     );
@@ -168,6 +172,18 @@ export default function ChatPage() {
         setActiveId(current._id);
         setConversation(current);
       }
+
+      const optimisticMessage = {
+        _id: `optimistic-${Date.now()}`,
+        sender: "user" as const,
+        content: message,
+        createdAt: new Date().toISOString(),
+      };
+      setConversation({
+        ...current,
+        messages: [...current.messages, optimisticMessage],
+      });
+
       const result = await sendMutation.mutateAsync({
         conversationId: current._id,
         message,
@@ -180,6 +196,7 @@ export default function ChatPage() {
           "Unable to send your message. Please try again.",
         ),
       );
+      if (conversation) setConversation(conversation);
       throw requestError;
     }
   };
@@ -188,29 +205,32 @@ export default function ChatPage() {
   const chatDisabled = readyDocuments.length === 0 || documentsQuery.isLoading;
 
   return (
-    <main className="min-h-screen bg-slate-50">
-      <header className="border-b border-slate-200 bg-white">
+    <main className="min-h-screen overflow-x-hidden bg-slate-50 text-slate-950 dark:bg-[#000000] dark:text-slate-100">
+      <header className="relative border-b border-slate-200 bg-white/90 backdrop-blur dark:border-slate-800 dark:bg-[#0a0a0a]/95">
         <div className="mx-auto flex max-w-[1500px] items-center justify-between px-4 py-3 sm:px-6">
-          <div className="flex items-center gap-3">
+          <div className="flex min-w-0 items-center gap-2 sm:gap-3">
             <button
               type="button"
               onClick={() => router.push("/dashboard")}
-              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900"
+              className="shrink-0 rounded-lg p-2 text-slate-500 hover:bg-slate-100 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-[#1c1c1c] dark:hover:text-white"
               aria-label="Back to dashboard"
             >
               <ArrowLeft size={18} />
             </button>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-slate-950 text-white">
+            <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-slate-950 text-white dark:bg-white dark:text-slate-950">
               <FileText size={17} />
             </span>
-            <div>
-              <p className="text-sm font-semibold text-slate-950">
+            <div className="min-w-0">
+              <p className="truncate text-sm font-semibold text-slate-950 dark:text-white">
                 AI Document Workspace
               </p>
-              <p className="text-xs text-slate-500">Grounded RAG chat</p>
+              <p className="hidden text-xs text-slate-500 dark:text-slate-400 sm:block">
+                Grounded RAG chat
+              </p>
             </div>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="hidden items-center gap-2 min-[500px]:flex">
+            <ThemeToggle />
             <button
               type="button"
               onClick={() =>
@@ -219,7 +239,7 @@ export default function ChatPage() {
                   conversationsQuery.refetch(),
                 ])
               }
-              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100"
+              className="rounded-lg p-2 text-slate-500 hover:bg-slate-100 dark:text-slate-400 dark:hover:bg-[#1c1c1c]"
               aria-label="Refresh"
             >
               <RefreshCw size={17} />
@@ -231,17 +251,59 @@ export default function ChatPage() {
                 router.replace("/login");
                 router.refresh();
               }}
-              className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100"
+              className="inline-flex items-center gap-2 rounded-lg px-3 py-2 text-sm text-slate-600 hover:bg-slate-100 dark:text-slate-300 dark:hover:bg-[#1c1c1c]"
             >
               <LogOut size={16} /> Sign out
             </button>
           </div>
+          <button
+            type="button"
+            onClick={() => setMenuOpen((open) => !open)}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-lg border border-slate-200 bg-white text-slate-700 dark:border-slate-700 dark:bg-[#0a0a0a] dark:text-slate-200 min-[500px]:hidden"
+          >
+            {menuOpen ? <X size={18} /> : <Menu size={18} />}
+          </button>
+          {menuOpen && (
+            <div className="absolute right-4 top-14 z-30 w-48 rounded-xl border border-slate-200 bg-white p-2 shadow-lg dark:border-slate-800 dark:bg-[#141414] min-[500px]:hidden">
+              <div className="flex items-center justify-between rounded-lg px-3 py-2 text-sm text-slate-600 dark:text-slate-300">
+                <span>Theme</span>
+                <ThemeToggle />
+              </div>
+              <button
+                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  void Promise.all([
+                    documentsQuery.refetch(),
+                    conversationsQuery.refetch(),
+                  ]);
+                }}
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-[#1c1c1c]"
+              >
+                <RefreshCw size={16} /> Refresh
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  setMenuOpen(false);
+                  await signOut();
+                  router.replace("/login");
+                  router.refresh();
+                }}
+                className="flex w-full items-center gap-2 rounded-lg px-3 py-2.5 text-left text-sm text-slate-700 hover:bg-slate-100 dark:text-slate-200 dark:hover:bg-[#1c1c1c]"
+              >
+                <LogOut size={16} /> Sign out
+              </button>
+            </div>
+          )}
         </div>
       </header>
 
       <section className="mx-auto max-w-[1500px] px-4 py-5 sm:px-6">
         {error && (
-          <div className="mb-4 flex items-start justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+          <div className="mb-4 flex items-start justify-between gap-4 rounded-xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700 dark:border-red-900/60 dark:bg-red-950/40 dark:text-red-300">
             <p>{error}</p>
             <button
               type="button"
@@ -253,7 +315,7 @@ export default function ChatPage() {
           </div>
         )}
 
-        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm lg:flex lg:h-[calc(100vh-110px)] lg:min-h-[620px]">
+        <div className="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-[#0a0a0a] lg:flex lg:h-[calc(100vh-110px)] lg:min-h-[620px]">
           <div className="flex min-h-0 flex-col lg:w-72 lg:shrink-0">
             <ConversationSidebar
               conversations={conversationsQuery.data ?? []}
@@ -268,7 +330,7 @@ export default function ChatPage() {
               selectedIds={selectedIds}
               onChange={setSelectedIds}
             />
-            <div className="hidden border-t border-slate-200 p-4 text-xs text-slate-400 lg:block">
+            <div className="hidden border-t border-slate-200 dark:border-[#0f172a] p-4 text-xs text-slate-400 lg:block">
               <div className="flex items-center gap-2">
                 <MessageSquare size={14} /> Answers include retrieved source
                 citations.

@@ -68,12 +68,12 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
   };
 
   return (
-    <section className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+    <section className="w-full min-w-0 max-w-full rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-[#0a0a0a] sm:p-6">
       <div className="mb-5">
-        <h2 className="text-base font-semibold text-slate-950">
+        <h2 className="text-base font-semibold text-slate-950 dark:text-white">
           Add a document
         </h2>
-        <p className="mt-1 text-sm text-slate-500">
+        <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
           Upload a PDF, DOCX, or TXT file up to 10 MB.
         </p>
       </div>
@@ -95,10 +95,10 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
           if (event.currentTarget === event.target) setIsDragging(false);
         }}
         onDrop={handleDrop}
-        className={`cursor-pointer rounded-xl border border-dashed p-8 text-center transition ${
+        className={`w-full max-w-full cursor-pointer overflow-hidden rounded-xl border border-dashed p-5 text-center transition sm:p-8 ${
           isDragging
-            ? "border-slate-900 bg-slate-50"
-            : "border-slate-300 bg-slate-50/60 hover:border-slate-400 hover:bg-slate-50"
+            ? "border-slate-900 bg-slate-50 dark:bg-[#0a0a0a]"
+            : "border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-[#111111] hover:border-slate-400 hover:bg-slate-50 dark:hover:bg-[#1c1c1c] dark:bg-[#0a0a0a]"
         }`}
       >
         <input
@@ -109,28 +109,28 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
           onChange={handleFileChange}
           disabled={isUploading}
         />
-        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm ring-1 ring-slate-200">
+        <span className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-white text-slate-700 shadow-sm ring-1 ring-slate-200 dark:bg-[#141414] dark:text-slate-200 dark:ring-slate-700">
           <UploadCloud size={22} />
         </span>
-        <p className="mt-4 text-sm font-medium text-slate-900">
+        <p className="mt-4 break-words text-sm font-medium text-slate-900 dark:text-white">
           Drop a file here or click to browse
         </p>
-        <p className="mt-1 text-xs text-slate-500">
+        <p className="mt-1 text-xs text-slate-500 dark:text-slate-400">
           PDF, DOCX, TXT · 10 MB maximum
         </p>
       </div>
 
       {selectedFile && (
-        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 p-4">
+        <div className="mt-4 rounded-xl border border-slate-200 bg-slate-50 dark:bg-[#141414] p-4">
           <div className="flex items-start gap-3">
-            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-slate-700 ring-1 ring-slate-200">
+            <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-slate-700 ring-1 ring-slate-200 dark:bg-[#141414] dark:text-slate-200 dark:ring-slate-700">
               <FileText size={18} />
             </span>
             <div className="min-w-0 flex-1">
-              <p className="truncate text-sm font-medium text-slate-900">
+              <p className="truncate text-sm font-medium text-slate-900 dark:text-white">
                 {selectedFile.name}
               </p>
-              <p className="mt-0.5 text-xs text-slate-500">
+              <p className="mt-0.5 text-xs text-slate-500 dark:text-slate-400">
                 {formatFileSize(selectedFile.size)}
               </p>
             </div>
@@ -142,14 +142,14 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
                 setTitle("");
                 setError(null);
               }}
-              className="rounded-lg p-1.5 text-slate-400 hover:bg-white hover:text-slate-700"
+              className="rounded-lg p-1.5 text-slate-400 hover:bg-white hover:text-slate-700 dark:text-slate-300"
             >
               <X size={17} />
             </button>
           </div>
 
           <label className="mt-4 block">
-            <span className="text-sm font-medium text-slate-700">
+            <span className="text-sm font-medium text-slate-700 dark:text-slate-300">
               Title{" "}
               <span className="font-normal text-slate-400">(optional)</span>
             </span>
@@ -159,7 +159,7 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
               onClick={(event) => event.stopPropagation()}
               placeholder={selectedFile.name}
               maxLength={200}
-              className="mt-1.5 w-full rounded-lg border border-slate-300 bg-white px-3 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
+              className="mt-1.5 w-full rounded-lg border border-slate-300 dark:border-slate-700 bg-white dark:bg-[#111111] px-3 py-2.5 text-sm outline-none transition placeholder:text-slate-400 focus:border-slate-500 focus:ring-2 focus:ring-slate-200"
             />
           </label>
 

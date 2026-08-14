@@ -46,68 +46,70 @@ export function RegisterForm() {
 
   return (
     <div className="mx-auto max-w-md">
-      <p className="text-sm font-medium text-slate-500">Get started</p>
-      <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950">
+      <p className="text-sm font-medium text-slate-500 dark:text-slate-400">
+        Get started
+      </p>
+      <h2 className="mt-2 text-3xl font-semibold tracking-tight text-slate-950 dark:text-white">
         Create your workspace
       </h2>
-      <p className="mt-3 text-sm leading-6 text-slate-500">
+      <p className="mt-3 text-sm leading-6 text-slate-500 dark:text-slate-400">
         Your documents and conversations stay tied to your account.
       </p>
 
       <form onSubmit={handleSubmit} className="mt-8 space-y-5">
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Name
           <input
             value={form.name}
             onChange={(e) => setForm({ ...form, name: e.target.value })}
             type="text"
             autoComplete="name"
-            className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-4 focus:ring-slate-100"
+            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-4 focus:ring-slate-100 dark:border-slate-700 dark:bg-[#111111] dark:text-slate-100 dark:focus:ring-slate-800"
             placeholder="Jane Doe"
           />
         </label>
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Email
           <input
             value={form.email}
             onChange={(e) => setForm({ ...form, email: e.target.value })}
             type="email"
             autoComplete="email"
-            className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-4 focus:ring-slate-100"
+            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-4 focus:ring-slate-100 dark:border-slate-700 dark:bg-[#111111] dark:text-slate-100 dark:focus:ring-slate-800"
             placeholder="you@example.com"
           />
         </label>
-        <label className="block text-sm font-medium text-slate-700">
+        <label className="block text-sm font-medium text-slate-700 dark:text-slate-300">
           Password
           <input
             value={form.password}
             onChange={(e) => setForm({ ...form, password: e.target.value })}
             type="password"
             autoComplete="new-password"
-            className="mt-2 w-full rounded-xl border border-slate-200 px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-4 focus:ring-slate-100"
+            className="mt-2 w-full rounded-xl border border-slate-200 bg-white px-4 py-3 outline-none transition focus:border-slate-500 focus:ring-4 focus:ring-slate-100 dark:border-slate-700 dark:bg-[#111111] dark:text-slate-100 dark:focus:ring-slate-800"
             placeholder="At least 8 characters"
           />
         </label>
         {error && (
           <p
             role="alert"
-            className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700"
+            className="rounded-xl bg-red-50 px-4 py-3 text-sm text-red-700 dark:bg-red-950/40 dark:text-red-300"
           >
             {error}
           </p>
         )}
         <button
           disabled={isSubmitting}
-          className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 font-medium text-white transition hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-60"
+          className="flex w-full items-center justify-center gap-2 rounded-xl bg-slate-950 px-4 py-3 font-medium text-white transition hover:bg-slate-800 dark:bg-white dark:text-slate-950 dark:hover:bg-slate-200 disabled:cursor-not-allowed disabled:opacity-60"
         >
           {isSubmitting && <Spinner />} Create account
         </button>
       </form>
 
-      <p className="mt-7 text-center text-sm text-slate-500">
+      <p className="mt-7 text-center text-sm text-slate-500 dark:text-slate-400">
         Already have an account?{" "}
         <Link
-          className="font-semibold text-slate-900 hover:underline"
+          className="font-semibold text-slate-900 hover:underline dark:text-white"
           href="/login"
         >
           Sign in

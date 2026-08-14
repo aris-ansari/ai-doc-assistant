@@ -38,7 +38,7 @@ export function DeleteDocumentDialog({
           <button
             type="button"
             onClick={onCancel}
-            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700"
+            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 dark:text-slate-300"
             aria-label="Close dialog"
           >
             <X size={18} />
@@ -46,12 +46,14 @@ export function DeleteDocumentDialog({
         </div>
         <h2
           id="delete-document-title"
-          className="mt-4 text-lg font-semibold text-slate-950"
+          className="mt-4 text-lg font-semibold text-slate-950 dark:text-white"
         >
           Delete this document?
         </h2>
-        <p className="mt-2 text-sm leading-6 text-slate-500">
-          <span className="font-medium text-slate-700">{document.title}</span>{" "}
+        <p className="mt-2 text-sm leading-6 text-slate-500 dark:text-slate-400">
+          <span className="font-medium text-slate-700 dark:text-slate-300">
+            {document.title}
+          </span>{" "}
           and its processed vectors will be permanently removed.
         </p>
         <div className="mt-6 flex justify-end gap-3">
@@ -59,7 +61,7 @@ export function DeleteDocumentDialog({
             type="button"
             onClick={onCancel}
             disabled={isDeleting}
-            className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-50"
+            className="rounded-lg border border-slate-200 px-4 py-2.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-50 dark:hover:bg-[#1c1c1c] dark:bg-[#141414] disabled:opacity-50"
           >
             Cancel
           </button>
