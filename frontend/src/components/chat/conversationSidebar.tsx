@@ -21,7 +21,7 @@ export function ConversationSidebar({
   isDeleting,
 }: ConversationSidebarProps) {
   return (
-    <aside className="flex min-h-0 w-full flex-col border-b border-slate-200 dark:border-slate-800 bg-white dark:border-slate-800 dark:bg-[#0a0a0a] lg:w-72 lg:border-b-0 lg:border-r">
+    <aside className="flex min-h-0 w-full flex-col border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-[#0a0a0a] lg:w-72 lg:border-b-0 lg:border-r">
       <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800 p-4">
         <div>
           <h2 className="text-sm font-semibold text-slate-950 dark:text-white">

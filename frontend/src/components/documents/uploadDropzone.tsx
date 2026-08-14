@@ -98,7 +98,7 @@ export function UploadDropzone({ isUploading, onUpload }: UploadDropzoneProps) {
         className={`w-full max-w-full cursor-pointer overflow-hidden rounded-xl border border-dashed p-5 text-center transition sm:p-8 ${
           isDragging
             ? "border-slate-900 bg-slate-50 dark:bg-[#0a0a0a]"
-            : "border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-[#111111] hover:border-slate-400 hover:bg-slate-50 dark:hover:bg-[#1c1c1c] dark:bg-[#0a0a0a]"
+            : "border-slate-300 dark:border-slate-700 bg-slate-50 hover:border-slate-400 hover:bg-slate-50 dark:hover:bg-[#1c1c1c] dark:bg-[#0a0a0a]"
         }`}
       >
         <input
