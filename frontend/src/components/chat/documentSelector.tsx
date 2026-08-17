@@ -27,7 +27,7 @@ export function DocumentSelector({
   };
 
   return (
-    <section className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-[#0a0a0a] p-4">
+    <section className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-[#0a0a0a] p-4 lg:border-r">
       <div className="flex items-center justify-between gap-3">
         <div>
           <h2 className="text-sm font-semibold text-slate-900 dark:text-white">
