@@ -28,7 +28,7 @@ export function DeleteDocumentDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="delete-document-title"
-        className="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+        className="w-full max-w-md rounded-2xl bg-white dark:bg-[#0a0a0a] p-6 shadow-2xl"
         onMouseDown={(event) => event.stopPropagation()}
       >
         <div className="flex items-start justify-between gap-4">

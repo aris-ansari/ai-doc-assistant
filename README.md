@@ -13,7 +13,7 @@ Retrieval-Augmented Generation (RAG) system.
 
 ## Live Demo
 
-🚀 **Live Website:** https://ai-document-workspace.vercel.app
+🚀 **Live Website:** https://ai-doc-workspace-virid.vercel.app/
 
 ------------------------------------------------------------------------
 
